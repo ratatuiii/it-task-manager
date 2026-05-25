@@ -16,7 +16,7 @@
         <aside class="sidebar">
             <div class="sidebar-logo">Task Manager</div>
             <nav class="sidebar-nav">
-                <a href="#">Home</a>
+                <a href="/">Home</a>
                 <hr class="nav-divider">
                 <a href="#">Tasks</a>
                 <hr class="nav-divider">
@@ -33,7 +33,7 @@
                 <div class="header-actions">
                     {% if user.is_authenticated %}
                         <a href="#">Profile</a>
-                        <form method="post"">
+                        <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
                             <button type="submit">Logout</button>
                         </form>
