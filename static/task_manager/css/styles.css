@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, serif;
+    background-color: #f5f5f5;
+    color: #1a1a1a;
+    height: 100vh;
+}
+
+.layout {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #1a1a1a;
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+}
+
+.sidebar-logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    padding: 0 16px 24px 16px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-nav a {
+    color: #ccc;
+    text-decoration: none;
+    padding: 12px 16px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav a:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.sidebar-nav .nav-divider {
+    width: 70%;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid #444;
+}
+
+/* Main */
+.main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background-color: #f5efe6;
+    border-bottom: 1px solid #e0d6c8;
+}
+
+.header-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-actions a {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.header-actions a:hover {
+    text-decoration: underline;
+}
+
+.header-actions button {
+    background: none;
+    border: 1px solid #1a1a1a;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.header-actions button:hover {
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+}
+
+.login-wrapper {
+    max-width: 400px;
+    margin: 48px auto;
+}
