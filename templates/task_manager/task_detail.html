@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.name }}{% endblock %}
+{% block header_title %}Task Detail{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+    <h1 class="profile-name">{{ task.name }}</h1>
+    <hr class="profile-divider">
+
+    <div class="profile-fields">
+
+        <div class="profile-row" id="row-name">
+            <span class="profile-label">Name</span>
+            <span class="profile-value display-mode">{{ task.name }}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='name' %}">
+                {% csrf_token %}
+                <input type="text" name="name" value="{{ task.name }}">
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-name')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-name')">Modify</button>
+        </div>
+
+        <div class="profile-row" id="row-description">
+            <span class="profile-label">Description</span>
+            <span class="profile-value display-mode">{{ task.description }}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='description' %}">
+                {% csrf_token %}
+                <textarea name="description">{{ task.description }}</textarea>
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-description')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-description')">Modify</button>
+        </div>
+
+        <div class="profile-row" id="row-deadline">
+            <span class="profile-label">Deadline</span>
+            <span class="profile-value display-mode">{{ task.deadline }}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='deadline' %}">
+                {% csrf_token %}
+                <input type="date" name="deadline" value="{{ task.deadline }}">
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-deadline')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-deadline')">Modify</button>
+        </div>
+
+        <div class="profile-row" id="row-priority">
+            <span class="profile-label">Priority</span>
+            <span class="profile-value display-mode">
+                <span class="priority priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+            </span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='priority' %}">
+                {% csrf_token %}
+                <select name="priority">
+                    <option value="urgent" {% if task.priority == "urgent" %}selected{% endif %}>Urgent</option>
+                    <option value="high" {% if task.priority == "high" %}selected{% endif %}>High</option>
+                    <option value="medium" {% if task.priority == "medium" %}selected{% endif %}>Medium</option>
+                    <option value="low" {% if task.priority == "low" %}selected{% endif %}>Low</option>
+                </select>
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-priority')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-priority')">Modify</button>
+        </div>
+
+        <div class="profile-row" id="row-task-type">
+            <span class="profile-label">Type</span>
+            <span class="profile-value display-mode">{{ task.task_type }}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='task_type' %}">
+                {% csrf_token %}
+                <select name="task_type">
+                    {% for tt in task_types %}
+                        <option value="{{ tt.pk }}" {% if task.task_type == tt %}selected{% endif %}>{{ tt.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-task-type')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-task-type')">Modify</button>
+        </div>
+
+        <div class="profile-row" id="row-is-completed">
+            <span class="profile-label">Status</span>
+            <span class="profile-value display-mode">{% if task.is_completed %}Done{% else %}Open{% endif %}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:task-update-field' pk=task.pk field='is_completed' %}">
+                {% csrf_token %}
+                <select name="is_completed">
+                    <option value="false" {% if not task.is_completed %}selected{% endif %}>Open</option>
+                    <option value="true" {% if task.is_completed %}selected{% endif %}>Done</option>
+                </select>
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-is-completed')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-is-completed')">Modify</button>
+        </div>
+
+    </div>
+
+    <div class="task-assignees">
+        <h3>Assignees</h3>
+        <ul>
+            {% for worker in task.assignees.all %}
+                <li>{{ worker.get_full_name }} ({{ worker.username }})</li>
+            {% empty %}
+                <li>No one assigned yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    function startEdit(rowId) {
+        const row = document.getElementById(rowId);
+        row.querySelectorAll(".display-mode").forEach(el => el.style.display = "none");
+        row.querySelectorAll(".edit-mode").forEach(el => el.style.display = "flex");
+    }
+
+    function cancelEdit(rowId) {
+        const row = document.getElementById(rowId);
+        row.querySelectorAll(".display-mode").forEach(el => el.style.display = "");
+        row.querySelectorAll(".edit-mode").forEach(el => el.style.display = "none");
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Create Task{% endblock %}
+{% block header_title %}Create Task{% endblock %}
+
+{% block content %}
+<div class="task-form-wrapper">
+    <h1 class="profile-name">New Task</h1>
+    <hr class="profile-divider">
+
+    <form method="post" class="task-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_name">Name</label>
+            <input type="text" name="name" id="id_name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            <textarea name="description" id="id_description" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="id_deadline">Deadline</label>
+            <input type="text" name="deadline" id="id_deadline" placeholder="YYYY-MM-DD" required>
+        </div>
+
+        <div class="form-group">
+            <label for="id_priority">Priority</label>
+            <select name="priority" id="id_priority">
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="task-type-input">Task Type</label>
+            <div class="task-type-wrapper">
+                <input
+                    type="text"
+                    id="task-type-input"
+                    autocomplete="off"
+                    placeholder="Type to search or create..."
+                >
+                <input type="hidden" name="task_type_input" id="task-type-hidden">
+                <ul class="task-type-dropdown" id="task-type-dropdown"></ul>
+            </div>
+            <span class="task-type-hint" id="task-type-hint"></span>
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" name="assign_self" id="assign_self" value="1">
+            <label for="assign_self" class="check-label">Include yourself as an assignee</label>
+        </div>
+
+        <button type="submit" class="btn-create">Create Task</button>
+    </form>
+</div>
+
+<script>
+    const taskTypes = [
+        {% for tt in task_types %}
+            "{{ tt.name }}",
+        {% endfor %}
+    ];
+
+    const input = document.getElementById("task-type-input");
+    const hidden = document.getElementById("task-type-hidden");
+    const dropdown = document.getElementById("task-type-dropdown");
+    const hint = document.getElementById("task-type-hint");
+
+    input.addEventListener("input", () => {
+        const val = input.value.trim();
+        hidden.value = val;
+        dropdown.innerHTML = "";
+        hint.textContent = "";
+
+        if (!val) return;
+
+        const matches = taskTypes.filter(t => t.toLowerCase().includes(val.toLowerCase()));
+
+        if (matches.length > 0) {
+            matches.forEach(match => {
+                const li = document.createElement("li");
+                li.textContent = match;
+                li.addEventListener("click", () => {
+                    input.value = match;
+                    hidden.value = match;
+                    dropdown.innerHTML = "";
+                    hint.textContent = "";
+                });
+                dropdown.appendChild(li);
+            });
+        } else {
+            hint.textContent = `No match — "${val}" will be created as a new task type.`;
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".task-type-wrapper")) {
+            dropdown.innerHTML = "";
+        }
+    });
+</script>
+{% endblock %}
