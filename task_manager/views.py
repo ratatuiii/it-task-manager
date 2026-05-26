@@ -6,7 +6,7 @@ from django.views import View
 from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from task_manager.models import Worker, Task, TaskType
 
@@ -73,6 +73,39 @@ class WorkerUpdateFieldView(LoginRequiredMixin, View):
 
         worker.save()
         return redirect("task_manager:worker-detail", pk=pk)
+
+
+class WorkerListView(LoginRequiredMixin, ListView):
+    model = Worker
+    template_name = "task_manager/worker_list.html"
+    context_object_name = "workers"
+
+    def get_queryset(self):
+        return Worker.objects.annotate(
+            completed_tasks=Count(
+                "tasks", filter=Q(tasks__is_completed=True)
+            )
+        ).order_by("-completed_tasks")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        all_ranked = list(self.get_queryset())
+        top10 = all_ranked[:10]
+
+        user = self.request.user
+        user_in_top10 = any(w.pk == user.pk for w in top10)
+
+        user_entry = None
+        if not user_in_top10:
+            for rank, worker in enumerate(all_ranked, start=1):
+                if worker.pk == user.pk:
+                    user_entry = (rank, worker)
+                    break
+
+        context["top10"] = list(enumerate(top10, start=1))
+        context["user_entry"] = user_entry
+        context["current_user"] = user
+        return context
 
 
 class TaskListView(LoginRequiredMixin, ListView):

@@ -541,3 +541,24 @@ body {
     color: #9b1c1c;
     font-weight: bold;
 }
+
+/* Leaderboard */
+.leaderboard-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.leaderboard-table th:first-child,
+.leaderboard-table td:first-child {
+    width: 48px;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.leaderboard-me td {
+    background-color: #f0ede8;
+}
+
+.leaderboard-outside {
+    border-top: 2px dashed #ddd;
+}
