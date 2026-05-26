@@ -38,7 +38,8 @@
                             <button type="submit">Logout</button>
                         </form>
                     {% else %}
-                        <a href="#">Login</a>
+                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url 'task_manager:register' %}">Register</a>
                     {% endif %}
                 </div>
             </header>

@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.db.models import Q, Count
 
 from task_manager.models import Worker, Task, TaskType
-
+from task_manager.forms import WorkerCreationForm
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "task_manager/index.html"
@@ -106,6 +106,12 @@ class WorkerListView(LoginRequiredMixin, ListView):
         context["user_entry"] = user_entry
         context["current_user"] = user
         return context
+
+
+class WorkerRegisterView(CreateView):
+    form_class = WorkerCreationForm
+    template_name = "registration/register.html"
+    success_url = reverse_lazy("login")
 
 
 class TaskListView(LoginRequiredMixin, ListView):
