@@ -2,6 +2,7 @@ from django.urls import path
 app_name = "task_manager"
 
 from task_manager.views import (
+    AssignYourselfView,
     IndexView,
     WorkerDetailView,
     WorkerListView,
@@ -23,4 +24,9 @@ urlpatterns = [
     path("tasks/<int:pk>/update/<str:field>/", TaskUpdateFieldView.as_view(), name="task-update-field"),
     path("workers/", WorkerListView.as_view(), name="worker-list"),
     path("accounts/register/", WorkerRegisterView.as_view(), name="register"),
+    path(
+        "tasks/<int:pk>/assign-yourself/",
+        AssignYourselfView.as_view(),
+        name="assign-yourself",
+    ),
 ]

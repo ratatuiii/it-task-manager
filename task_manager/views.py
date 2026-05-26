@@ -121,8 +121,6 @@ class TaskListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
 
-
-
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = "task_manager/task_detail.html"
@@ -134,8 +132,8 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-from django.http import JsonResponse
-import json
+# from django.http import JsonResponse
+# import json
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -188,3 +186,13 @@ class TaskUpdateFieldView(LoginRequiredMixin, View):
 
         task.save()
         return redirect("task_manager:task-detail", pk=pk)
+
+
+class AssignYourselfView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+
+        if request.user not in task.assignees.all():
+            task.assignees.add(request.user)
+
+        return redirect("task_manager:task-detail", pk=task.pk)
