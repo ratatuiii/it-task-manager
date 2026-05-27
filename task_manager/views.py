@@ -1,6 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.shortcuts import render
 
-
-class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = "task_manager/index.html"
+# Create your views here.
