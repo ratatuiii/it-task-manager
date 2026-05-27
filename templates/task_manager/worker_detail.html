@@ -46,7 +46,22 @@
             </form>
             <button class="modify-btn display-mode" onclick="startEdit('row-email')">Modify</button>
         </div>
-
+        <div class="profile-row" id="row-position">
+            <span class="profile-label">Position</span>
+            <span class="profile-value display-mode">{{ worker.position.name|default:"—" }}</span>
+            <form class="profile-form edit-mode" method="post" action="{% url 'task_manager:worker-update-field' pk=worker.pk field='position' %}">
+                {% csrf_token %}
+                <select name="position">
+                    <option value="">— none —</option>
+                    {% for position in positions %}
+                        <option value="{{ position.pk }}" {% if worker.position == position %}selected{% endif %}>{{ position.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit('row-position')">Cancel</button>
+            </form>
+            <button class="modify-btn display-mode" onclick="startEdit('row-position')">Modify</button>
+        </div>
     </div>
 
     <a href="#" class="password-change-link">Wanna change your password?</a>
