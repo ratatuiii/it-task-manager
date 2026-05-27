@@ -9,7 +9,12 @@ from django.utils import timezone
 from django.db.models import Q, Count
 
 from task_manager.models import Worker, Task, TaskType, Position
-from task_manager.forms import WorkerCreationForm, PositionCreateForm, TaskTypeCreateForm
+from task_manager.forms import (
+    WorkerCreationForm,
+    PositionCreateForm,
+    TaskTypeCreateForm
+    )
+
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "task_manager/index.html"
@@ -43,7 +48,9 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
         context["active_tasks"] = active_tasks_sorted
         context["completed_by_priority"] = completed_by_priority
-        context["tasks_in_work"] = user.tasks.filter(is_completed=False).count()
+        context["tasks_in_work"] = user.tasks.filter(
+            is_completed=False
+        ).count()
         context["tasks_past_deadline"] = user.tasks.filter(
             is_completed=False, deadline__lt=today
         ).count()
@@ -71,7 +78,10 @@ class WorkerUpdateFieldView(LoginRequiredMixin, View):
         if field == "username":
             worker.username = request.POST.get("username", worker.username)
         elif field == "legal_name":
-            worker.first_name = request.POST.get("first_name", worker.first_name)
+            worker.first_name = request.POST.get(
+                "first_name",
+                worker.first_name
+            )
             worker.last_name = request.POST.get("last_name", worker.last_name)
         elif field == "email":
             worker.email = request.POST.get("email", worker.email)
@@ -142,7 +152,6 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     template_name = "task_manager/task_form.html"
@@ -177,7 +186,10 @@ class TaskUpdateFieldView(LoginRequiredMixin, View):
         if field == "name":
             task.name = request.POST.get("name", task.name)
         elif field == "description":
-            task.description = request.POST.get("description", task.description)
+            task.description = request.POST.get(
+                "description",
+                task.description
+            )
         elif field == "deadline":
             task.deadline = request.POST.get("deadline", task.deadline)
         elif field == "priority":
