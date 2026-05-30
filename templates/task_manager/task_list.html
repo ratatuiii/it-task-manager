@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+{% block header_title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="task-list-wrapper">
+    <h1 class="task-list-title">Available Tasks</h1>
+    <hr class="task-list-divider">
+
+    <div class="task-list-header">
+        <button class="btn-create" onclick="window.location.href='{% url 'task_manager:task-create' %}'">
+            + Create New Task
+        </button>
+    </div>
+
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Priority</th>
+                <th>Type</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.name }}</td>
+                <td>
+                    <span class="priority priority-{{ task.priority }}">
+                        {{ task.get_priority_display }}
+                    </span>
+                </td>
+                <td>{{ task.task_type }}</td>
+                <td>{{ task.deadline }}</td>
+                <td>
+                    {% if task.is_completed %}
+                        <span class="status-done">Done</span>
+                    {% else %}
+                        <span class="status-open">Open</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <button class="btn-apply" onclick="window.location.href='{% url 'task_manager:task-detail' task.pk %}'">
+                        View Details
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="task-empty">No tasks yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">&larr; Prev</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next &rarr;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

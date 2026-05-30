@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Positions{% endblock %}
+{% block header_title %}Positions{% endblock %}
+
+{% block content %}
+<div class="simple-list-wrapper">
+    <div class="simple-list-top">
+        <h1 class="task-list-title" style="text-align: left;">Positions</h1>
+        <form method="post" action="{% url 'task_manager:position-create' %}" class="inline-create-form">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="New position..." required>
+            <button type="submit" class="btn-create">Add</button>
+        </form>
+    </div>
+<hr class="task-list-divider" style="margin: 0 0 16px 0; width: 100%;">
+
+</div>
+<hr class="task-list-divider" style="margin: 0 0 16px 0; width: 100%;">
+
+<form method="get" class="list-search">
+    <input type="text" name="search" placeholder="Search positions..." value="{{ search }}" autocomplete="off">
+    <button type="submit">Search</button>
+    {% if search %}
+        <a href="{% url 'task_manager:position-list' %}" class="search-clear">Clear</a>
+    {% endif %}
+</form>
+
+<table class="task-table">
+    <table class="task-table">
+        <tbody>
+            <form method="get" class="list-search">
+            {% for position in positions %}
+            <tr>
+                <td>
+                    {{ position.name }}
+                    {% if request.user.position == position %}
+                        <span class="current-badge">(current)</span>
+                    {% endif %}
+                </td>
+                <td class="delete-cell">
+                    <form method="post" action="{% url 'task_manager:position-assign' pk=position.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-assign">Assign</button>
+                    </form>
+                    <form method="post" action="{% url 'task_manager:position-delete' pk=position.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="task-empty">No positions yet.</td>
+            </tr>
+            {% endfor %}
+            </form>
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">&larr; Prev</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next &rarr;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

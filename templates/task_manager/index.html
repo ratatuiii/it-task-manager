@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block header_title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="welcome-title">Welcome back, {{ user.first_name }}!</h1>
+
+<div class="dashboard">
+
+    <!-- Active Tasks -->
+    <div class="dashboard-tasks">
+        <h2 class="dash-section-title">Your Active Tasks</h2>
+        <hr class="dash-divider">
+
+        {% if active_tasks %}
+            <table class="task-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Priority</th>
+                        <th>Type</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in active_tasks %}
+                    <tr>
+                        <td><a href="{% url 'task_manager:task-detail' pk=task.pk %}">{{ task.name }}</a></td>
+                        <td>
+                            <span class="priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </td>
+                        <td>{{ task.task_type }}</td>
+                        <td>{{ task.deadline }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="dash-empty">No active tasks. Enjoy the peace.</p>
+        {% endif %}
+    </div>
+
+    <!-- Statistics -->
+    <div class="dashboard-stats">
+        <h2 class="dash-section-title">Statistics</h2>
+        <hr class="dash-stat-divider">
+
+        <p class="stat-heading">Completed Tasks</p>
+        <hr class="dash-stat-divider">
+
+        <div class="stat-priority-list">
+            <div class="stat-row">
+                <span class="priority priority-urgent">Urgent</span>
+                <span>{{ completed_by_priority.urgent }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="priority priority-high">High</span>
+                <span>{{ completed_by_priority.high }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="priority priority-medium">Medium</span>
+                <span>{{ completed_by_priority.medium }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="priority priority-low">Low</span>
+                <span>{{ completed_by_priority.low }}</span>
+            </div>
+        </div>
+
+        <hr class="dash-stat-divider">
+
+        <div class="stat-row stat-summary">
+            <span>Tasks in work</span>
+            <span>{{ tasks_in_work }}</span>
+        </div>
+        <div class="stat-row stat-summary {% if tasks_past_deadline %}stat-overdue{% endif %}">
+            <span>Past deadline</span>
+            <span>{{ tasks_past_deadline }}</span>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
